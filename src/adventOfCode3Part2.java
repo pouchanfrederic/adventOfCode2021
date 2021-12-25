@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class adventOfCode3 {
+public class adventOfCode3Part2 {
 
     public static void main(String[] args) throws IOException {
 
@@ -60,10 +60,11 @@ public class adventOfCode3 {
     }
 
     public static String ToString(int[] ar) {
+
         return Arrays.toString(ar).replace("[", "")
-                .replace("]", "")
-                .replace(" ", "")
-                .replace(",", "");
+                                    .replace("]", "")
+                                    .replace(" ", "")
+                                    .replace(",", "");
     }
 
 }
