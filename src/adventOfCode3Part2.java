@@ -5,24 +5,21 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public class adventOfCode3Part2 {
 
     public static void main(String[] args) throws IOException {
 
         String ligne = "";
-        int[] gammaRate = new int[12]; // Most common bit (ça doit donner 10110)
-        int[] epsilonRate = new int[12]; // second most common bit (ça doit donner 01001)
-        // Puis faut le transforcer en décilal et multiplier le résultat pour avoir
-        // powerConsumption
-        // int powerConsumption = gammaRate * epsilonRate;
-        // int nombreDeZero = 0, nombreDeUn = 0;
-        int[] nombreDeZero = new int[12]; // A changer à 12 pour le vrai tableau
-        int[] nombreDeUn = new int[12]; // A changer en 12
+        int[] gammaRate = new int[12];
+        int[] epsilonRate = new int[12];
+        int[] nombreDeZero = new int[12];
+        int[] nombreDeUn = new int[12];
         ArrayList<String> tableauDeNombre = new ArrayList<>();
 
+
         FileInputStream fstream = new FileInputStream("src/Data/date3.txt");
-        // FileInputStream fstream = new
         // FileInputStream("C:\\Users\\FRED\\Documents\\Développement\\adventOfCode\\src\\Data\\data2.txt");
         DataInputStream in = new DataInputStream(fstream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
@@ -30,41 +27,97 @@ public class adventOfCode3Part2 {
         while ((ligne = br.readLine()) != null) {
             tableauDeNombre.add(ligne);
         }
-        int index = 0;
+
         for (int i = 0; i < tableauDeNombre.size(); i++) {
             for (int y = 0; y < tableauDeNombre.get(i).length(); y++) {
                 if (Character.getNumericValue(tableauDeNombre.get(i).charAt(y)) == 1)
-                    // System.out.println("Un : " + tableauDeNombre.get(i).charAt(y));
                     nombreDeUn[y] += 1;
                 else
                     nombreDeZero[y] += 1;
-                // System.out.println("Zero : " + tableauDeNombre.get(i).charAt(y));
-                // System.out.println(tableauDeNombre.get(i));
             }
         }
+
+        ArrayList<String> co2ScrubberRating = new ArrayList<>(tableauDeNombre);
+        ArrayList<String> oxygenGeneratorRating = new ArrayList<>(tableauDeNombre);
+
+        //Recherche de la valeur "Oxygen generator rating" -> 3005
         for (int z = 0; z < nombreDeUn.length; z++) {
-            if (nombreDeUn[z] > nombreDeZero[z]) {
-                gammaRate[z] = 1;
-                epsilonRate[z] = 0;
-            } else {
-                gammaRate[z] = 0;
-                epsilonRate[z] = 1;
+            var test = mostCommonBitByColumn(oxygenGeneratorRating, z);
+            oxygenGeneratorRating = removeFromArray(oxygenGeneratorRating, test, z);
+        }
+
+        //Recherche de la valeur "CO2 scrubber rating" -> 1616
+        for (int z = 0; z < nombreDeUn.length; z++) {
+            var test = lessCommonBitByColumn(co2ScrubberRating, z);
+            co2ScrubberRating = removeFromArray(co2ScrubberRating, test, z);
+            if(co2ScrubberRating.size() == 1){
+                break;
             }
         }
-        var epsilonRateInteger = ToString(epsilonRate);
-        var gammaRateInteger = ToString(gammaRate);
-        var decimalEpsilonRate = Integer.parseInt(epsilonRateInteger, 2);
-        var decimalGammaRate = Integer.parseInt(gammaRateInteger, 2);
-        System.out.println(decimalEpsilonRate * decimalGammaRate);
+        var test = Integer.parseInt(co2ScrubberRating.get(0), 2);
+        var test2 = Integer.parseInt(oxygenGeneratorRating.get(0), 2);
+        System.out.println(test * test2);
 
     }
 
     public static String ToString(int[] ar) {
-
         return Arrays.toString(ar).replace("[", "")
                                     .replace("]", "")
                                     .replace(" ", "")
                                     .replace(",", "");
+    }
+
+    public static int mostCommonBitByColumn(ArrayList<String> tableau, int column){
+        int nombreDeZero = 0, nombreDeUn = 0;
+        for (String s : tableau) {
+            if (Character.getNumericValue(s.charAt(column)) == 1) {
+                nombreDeUn += 1;
+            } else {
+                nombreDeZero += 1;
+            }
+        } 
+        if (nombreDeUn > nombreDeZero){
+            return 1;
+        }
+        if (nombreDeUn == nombreDeZero){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public static int lessCommonBitByColumn(ArrayList<String> tableau, int column){
+        int nombreDeZero = 0, nombreDeUn = 0;
+        for (String s : tableau) {
+            if (Character.getNumericValue(s.charAt(column)) == 0) {
+                nombreDeUn += 1;
+            } else {
+                nombreDeZero += 1;
+            }
+        }
+        if (nombreDeUn > nombreDeZero){
+            return 1;
+        }
+        if (nombreDeUn == nombreDeZero){
+            return 0;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public static ArrayList<String> removeFromArray(ArrayList<String> tableau, int value, int column){
+        for (int i = 0; i < tableau.size(); i++) {
+            int test = Character.getNumericValue(tableau.get(i).charAt(column));
+            if (test == value){
+            }
+            else{
+                tableau.remove(i);
+                i-=1;
+            }
+        }
+        return tableau;
     }
 
 }
