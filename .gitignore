@@ -1,2 +1,5 @@
 .idea/*
 out/*
+out/production/*
+.DS_*
+.vscode

@@ -22,7 +22,6 @@ public class adventOfCode3 {
         ArrayList<String> tableauDeNombre = new ArrayList<>();
 
         FileInputStream fstream = new FileInputStream("src/Data/date3.txt");
-        // FileInputStream fstream = new
         // FileInputStream("C:\\Users\\FRED\\Documents\\Développement\\adventOfCode\\src\\Data\\data2.txt");
         DataInputStream in = new DataInputStream(fstream);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
